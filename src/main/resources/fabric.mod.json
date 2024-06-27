@@ -3,25 +3,20 @@
 	"id": "openstats",
 	"version": "${version}",
 	"name": "openStats",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "En mod som låter dig kolla upp spelare på 90gQopen! Detta görs genom /lookup.",
 	"authors": [
 		"Fy17"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/openstats",
+		"sources": "https://github.com/FySjutton/OpenStats"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/openstats/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"open.openstats.openStats"
-		]
+		"main": ["open.openstats.openStats"]
 	},
-	"mixins": [
-		"openstats.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.21",
