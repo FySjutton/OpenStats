@@ -35,22 +35,17 @@ public class informationList extends ElementListWidget<informationList.Entry> {
             "uhc_points", "uhc_games_played", "uhc_wins", "uhc_kills", "uhc_deaths"
     ));
 
-    private final ArrayList<String> EVENT = new ArrayList<>(Arrays.asList(
-            "event_wins", "gold", "gold_earned", "mvps", "participation", "party_invites", "lobby_visibility", "random_skin", "spectator_visibility", "lobby_parkour_time", "lobby_parkour_reward", "anvil_games_played", "anvil_wins", "anvil_gold_earned", "border_runners_games_played", "border_runners_wins", "border_runners_gold_earned", "border_runners_rounds_survived", "border_runners_powerups_used", "border_runners_most_rounds_survived", "dragons_games_played", "dragons_wins", "dragons_gold_earned", "dragons_arrows_shot", "dragons_arrows_hit", "dragons_leaps_used", "dragons_crates_destroyed", "infection_games_played", "infection_wins", "infection_gold_earned", "infection_alpha_games", "infection_infected_kills", "infection_survivor_kills", "infection_most_kills_infected", "infection_most_kills_survivor", "maze_games_played", "maze_wins", "maze_gold_earned", "oitc_games_played", "oitc_wins", "oitc_gold_earned", "oitc_melee_kills", "oitc_ranged_kills", "oitc_deaths", "oitc_arrows_shot", "oitc_highest_kill_streak", "oitc_longest_bow_kill", "parkour_games_played", "parkour_wins", "parkour_gold_earned", "parkour_rounds_survived", "parkour_most_rounds_survived", "red_rover_games_played", "red_rover_wins", "red_rover_gold_earned", "red_rover_killer_games", "red_rover_rounds_survived", "red_rover_kills", "red_rover_dashes", "red_rover_most_rounds_survived", "snow_fight_games_played", "snow_fight_wins", "snow_fight_gold_earned", "snow_fight_kills", "snow_fight_snowballs_thrown", "snow_fight_snowballs_hit", "spleef_games_played", "spleef_wins", "spleef_gold_earned", "spleef_blocks_broken", "spleef_snowballs_thrown", "spleef_most_blocks_broken", "sumo_games_played", "sumo_wins", "sumo_gold_earned", "sumo_kills", "sumo_most_kills", "sg_games_played", "sg_wins", "sg_gold_earned", "sg_kills", "sg_deaths", "sg_chests_looted", "sg_most_kills", "tnt_run_games_played", "tnt_run_wins", "tnt_run_gold_earned", "tnt_run_walked_over_blocks", "tnt_run_leaps_used", "tnt_run_most_blocks_broken"
-    ));
-
     public informationList(int width, int height, String tabName, JsonObject data) {
         super(MinecraftClient.getInstance(), width, height - 24, 24, 25);
 
         this.data = data;
 
         ArrayList<String> selected = switch (tabName) {
-            case "INFO" -> INFO;
             case "SURVIVAL" -> SURVIVAL;
             case "CREATIVE" -> CREATIVE;
             case "MB" -> MB;
             case "UHC" -> UHC;
-            default -> EVENT;
+            default -> INFO;
         };
 
         for (String x : selected) {
@@ -109,14 +104,6 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         }
 
         value = WordUtils.capitalizeFully(value);
-
-        setting = setting
-                .replaceAll("Tnt", "TNT")
-                .replaceAll("Sg", "SG")
-                .replaceAll("Oitc", "OITC")
-                .replaceAll("Mvp", "MVP")
-                .replaceAll("Mb", "MB")
-                .replaceAll("Uhc", "UHC");
 
         switch (oriSetting) {
             case "survival_money" -> value += " kr";
