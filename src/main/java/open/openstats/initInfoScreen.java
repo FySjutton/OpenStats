@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import open.openstats.informationScreen.infoScreen;
 
 import java.net.URI;
 import java.net.http.HttpClient;

@@ -1,4 +1,4 @@
-package open.openstats;
+package open.openstats.informationScreen;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
@@ -6,21 +6,14 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-import static open.openstats.openStats.LOGGER;
-
-public class infoList extends ElementListWidget<infoList.Entry> {
+public class informationList extends ElementListWidget<informationList.Entry> {
     private JsonObject data;
-    private LinkedHashMap<String, Boolean> view = new LinkedHashMap<>();
 
     private final ArrayList<String> INFO = new ArrayList<>(Arrays.asList(
             "id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "banned"
@@ -46,38 +39,22 @@ public class infoList extends ElementListWidget<infoList.Entry> {
             "event_wins", "gold", "gold_earned", "mvps", "participation", "party_invites", "lobby_visibility", "random_skin", "spectator_visibility", "lobby_parkour_time", "lobby_parkour_reward", "anvil_games_played", "anvil_wins", "anvil_gold_earned", "border_runners_games_played", "border_runners_wins", "border_runners_gold_earned", "border_runners_rounds_survived", "border_runners_powerups_used", "border_runners_most_rounds_survived", "dragons_games_played", "dragons_wins", "dragons_gold_earned", "dragons_arrows_shot", "dragons_arrows_hit", "dragons_leaps_used", "dragons_crates_destroyed", "infection_games_played", "infection_wins", "infection_gold_earned", "infection_alpha_games", "infection_infected_kills", "infection_survivor_kills", "infection_most_kills_infected", "infection_most_kills_survivor", "maze_games_played", "maze_wins", "maze_gold_earned", "oitc_games_played", "oitc_wins", "oitc_gold_earned", "oitc_melee_kills", "oitc_ranged_kills", "oitc_deaths", "oitc_arrows_shot", "oitc_highest_kill_streak", "oitc_longest_bow_kill", "parkour_games_played", "parkour_wins", "parkour_gold_earned", "parkour_rounds_survived", "parkour_most_rounds_survived", "red_rover_games_played", "red_rover_wins", "red_rover_gold_earned", "red_rover_killer_games", "red_rover_rounds_survived", "red_rover_kills", "red_rover_dashes", "red_rover_most_rounds_survived", "snow_fight_games_played", "snow_fight_wins", "snow_fight_gold_earned", "snow_fight_kills", "snow_fight_snowballs_thrown", "snow_fight_snowballs_hit", "spleef_games_played", "spleef_wins", "spleef_gold_earned", "spleef_blocks_broken", "spleef_snowballs_thrown", "spleef_most_blocks_broken", "sumo_games_played", "sumo_wins", "sumo_gold_earned", "sumo_kills", "sumo_most_kills", "sg_games_played", "sg_wins", "sg_gold_earned", "sg_kills", "sg_deaths", "sg_chests_looted", "sg_most_kills", "tnt_run_games_played", "tnt_run_wins", "tnt_run_gold_earned", "tnt_run_walked_over_blocks", "tnt_run_leaps_used", "tnt_run_most_blocks_broken"
     ));
 
-    public infoList(int width, int height, JsonObject data) {
-        super(MinecraftClient.getInstance(), width, height - 20, 10, 25);
-        view.put("INFO", false);
-        view.put("SURVIVAL", false);
-        view.put("CREATIVE", false);
-        view.put("MB", false);
-        view.put("UHC", false);
-        view.put("EVENT", false);
+    public informationList(int width, int height, String tabName, JsonObject data) {
+        super(MinecraftClient.getInstance(), width, height - 24, 24, 25);
 
         this.data = data;
 
-        update_entries();
-    }
+        ArrayList<String> selected = switch (tabName) {
+            case "INFO" -> INFO;
+            case "SURVIVAL" -> SURVIVAL;
+            case "CREATIVE" -> CREATIVE;
+            case "MB" -> MB;
+            case "UHC" -> UHC;
+            default -> EVENT;
+        };
 
-    private void update_entries() {
-        this.clearEntries();
-        for (String x : view.keySet()) {
-            addEntry(new Entry(true, x));
-            if (view.get(x)) {
-                ArrayList<String> selected = switch (x) {
-                    case "INFO" -> INFO;
-                    case "SURVIVAL" -> SURVIVAL;
-                    case "CREATIVE" -> CREATIVE;
-                    case "MB" -> MB;
-                    case "UHC" -> UHC;
-                    default -> EVENT;
-                };
-
-                for (String y : selected) {
-                    addEntry(new Entry(false, y));
-                }
-            }
+        for (String x : selected) {
+            addEntry(new Entry(x));
         }
     }
 
@@ -92,62 +69,36 @@ public class infoList extends ElementListWidget<infoList.Entry> {
     }
 
     public class Entry extends ElementListWidget.Entry<Entry> {
-        private ButtonWidget button;
-        private Text display;
+        private final String displayText;
+        private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
-        private TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-
-        public Entry(boolean button, String value) {
-            if (button) {
-                this.button = ButtonWidget.builder(Text.of(value), btn -> toggleButton(value))
-                    .dimensions((int) (width * 0.1), 0, (int) (width * 0.8), 20)
-                    .build();
-            } else {
-                String text;
-                try {
-                    text = data.get(value).getAsString();
-                } catch (Exception e) {
-                    text = "";
-                }
-                this.display = getText(value, text);
+        public Entry(String setting) {
+            String value;
+            try {
+                value = data.get(setting).getAsString();
+            } catch (Exception e) {
+                value = "";
             }
+            this.displayText = getText(setting, value);
         }
 
         @Override
         public List<? extends Selectable> selectableChildren() {
-            List<Selectable> children = new ArrayList<>();
-            if (button != null) {
-                children.add(button);
-            }
-            return children;
+            return List.of();
         }
 
         @Override
         public List<? extends Element> children() {
-            List<Element> children = new ArrayList<>();
-            if (button != null) {
-                children.add(button);
-            }
-            return children;
+            return List.of();
         }
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            if (button != null) {
-                button.setY(y);
-                button.render(context, mouseX, mouseY, tickDelta);
-            } else {
-                context.drawCenteredTextWithShadow(textRenderer, display, width / 2, y + entryHeight / 2 - 9 / 2, 0xFFFFFF);
-            }
+            context.drawCenteredTextWithShadow(textRenderer, displayText, width / 2, y + entryHeight / 2 - 9 / 2, 0xFFFFFF);
         }
     }
 
-    private void toggleButton(String btn) {
-        view.replace(btn, !view.get(btn));
-        update_entries();
-    }
-
-    private Text getText(String oriSetting, String oriValue) {
+    private String getText(String oriSetting, String oriValue) {
         String setting = oriSetting;
         String value = oriValue;
 
@@ -167,8 +118,11 @@ public class infoList extends ElementListWidget<infoList.Entry> {
                 .replaceAll("Mb", "MB")
                 .replaceAll("Uhc", "UHC");
 
-        if (oriSetting.equals("survival_money")) {
-            value += " kr";
+        switch (oriSetting) {
+            case "survival_money" -> value += " kr";
+            case "survival_experience" -> value += " XP";
+            case "onlinetime" -> value = parseMillis(Long.parseLong(value));
+            case "creative_rank" -> value = parseCreativeRank(oriValue);
         }
 
         if (oriValue.isEmpty()) {
@@ -179,22 +133,44 @@ public class infoList extends ElementListWidget<infoList.Entry> {
             value = "§c" + value;
         }
 
-        Text textValue = Text.of(value);
+        return setting + ": §7" + value;
+    }
 
-        if (oriValue.equals("bashlang")) {
-            MutableText finished = Text.literal("");
-            finished.append(Text.literal("B").setStyle(Style.EMPTY.withColor(0x557fff)));
-            finished.append(Text.literal("A").setStyle(Style.EMPTY.withColor(0x55d4ff)));
-            finished.append(Text.literal("S").setStyle(Style.EMPTY.withColor(0x55ffd5)));
-            finished.append(Text.literal("H").setStyle(Style.EMPTY.withColor(0x55ff80)));
-            finished.append(Text.literal("L").setStyle(Style.EMPTY.withColor(0x7fff55)));
-            finished.append(Text.literal("A").setStyle(Style.EMPTY.withColor(0xd4ff55)));
-            finished.append(Text.literal("N").setStyle(Style.EMPTY.withColor(0xffd555)));
-            finished.append(Text.literal("G").setStyle(Style.EMPTY.withColor(0xff8055)));
+    public static String parseMillis(long millis) {
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        long months = days / 30; // May not be true as not all months are 30 days, but yeah...
 
-            textValue = finished;
+        days %= 30;
+        hours %= 24;
+        minutes %= 60;
+        seconds %= 60;
+
+        StringBuilder sb = new StringBuilder();
+
+        if (months > 0) {sb.append(months).append(" mån, ");}
+        if (days > 0) {sb.append(days).append(" d, ");}
+        if (hours > 0) {sb.append(hours).append(" h, ");}
+        if (minutes > 0) {sb.append(minutes).append(" min, ");}
+        if (seconds > 0) {sb.append(seconds).append(" sek");}
+
+        if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
+            sb.delete(sb.length() - 2, sb.length());
         }
 
-        return Text.of(setting + ": §7" + textValue);
+        return sb.toString();
+    }
+
+    private String parseCreativeRank(String rank) {
+        switch (rank) {
+            case "newbie" -> rank = "§aNybörjare";
+            case "apprentice" -> rank = "§bLärling";
+            case "experienced" -> rank = "§dErfaren!";
+            case "expert" -> rank = "§5Expert";
+            case "architect" -> rank = "§6Arkitekt";
+        }
+        return rank;
     }
 }
