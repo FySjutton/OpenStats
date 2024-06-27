@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "openstats",
+	"version": "${version}",
+	"name": "openStats",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Fy17"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/openstats/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"open.openstats.openStats"
+		]
+	},
+	"mixins": [
+		"openstats.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
