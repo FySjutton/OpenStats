@@ -105,6 +105,10 @@ public class informationList extends ElementListWidget<informationList.Entry> {
 
         value = WordUtils.capitalizeFully(value);
 
+        setting = setting
+                .replaceAll("Mb", "MB")
+                .replaceAll("Uhc", "UHC");
+
         switch (oriSetting) {
             case "survival_money" -> value += " kr";
             case "survival_experience" -> value += " XP";

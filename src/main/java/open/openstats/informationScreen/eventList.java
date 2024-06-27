@@ -169,9 +169,7 @@ public class eventList extends ElementListWidget<eventList.Entry> {
                 .replaceAll("Tnt", "TNT")
                 .replaceAll("Sg", "SG")
                 .replaceAll("Oitc", "OITC")
-                .replaceAll("Mvp", "MVP")
-                .replaceAll("Mb", "MB")
-                .replaceAll("Uhc", "UHC");
+                .replaceAll("Mvp", "MVP");
 
         if (value.isEmpty()) {
             value = "§6N/A";
