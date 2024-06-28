@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class eventList extends ElementListWidget<eventList.Entry> {
     private JsonObject data;
@@ -54,7 +55,7 @@ public class eventList extends ElementListWidget<eventList.Entry> {
         SUMO(new ArrayList<>(Arrays.asList(
                 "sumo_games_played", "sumo_wins", "sumo_gold_earned", "sumo_kills", "sumo_most_kills"
         ))),
-        SG(new ArrayList<>(Arrays.asList(
+        SURVIVAL_GAMES(new ArrayList<>(Arrays.asList(
                 "sg_games_played", "sg_wins", "sg_gold_earned", "sg_kills", "sg_deaths", "sg_chests_looted", "sg_most_kills"
         ))),
         TNT_RUN(new ArrayList<>(Arrays.asList(
@@ -162,6 +163,23 @@ public class eventList extends ElementListWidget<eventList.Entry> {
     }
 
     private String getText(String setting, String value) {
+        switch (setting) {
+            case "oitc_longest_bow_kill" -> value += " blocks";
+            case "lobby_parkour_time" -> value = parkourTime(Long.parseLong(value));
+            case "lobby_parkour_reward" -> value = "#" + value;
+        }
+
+        if (setting.equals("participation") || setting.equals("party_invites") || setting.equals("random_skin") || setting.equals("spectator_visibility")) {
+            value = value.equals("1") ? "§aPå" : "§cAv";
+        }
+
+        if (setting.equals("lobby_visibility")) {
+            switch (value) {
+                case "0" -> value = "§aAlla";
+                case "1" -> value = "§dParty";
+                case "2" -> value = "§8Ingen";
+            }
+        }
 
         setting = WordUtils.capitalizeFully(setting.replaceAll("_", " "));
 
@@ -176,5 +194,13 @@ public class eventList extends ElementListWidget<eventList.Entry> {
         }
 
         return setting + ": §7" + value;
+    }
+
+    public static String parkourTime(long millis) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
+        long milliseconds = millis % 1000;
+
+        return String.format("%02d:%02d.%03d", minutes, seconds, milliseconds);
     }
 }

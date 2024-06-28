@@ -103,7 +103,9 @@ public class informationList extends ElementListWidget<informationList.Entry> {
             setting = WordUtils.capitalizeFully(setting.replaceAll("_", " "));
         }
 
-        value = WordUtils.capitalizeFully(value);
+        if (!setting.equals("username")) {
+            value = WordUtils.capitalizeFully(value);
+        }
 
         setting = setting
                 .replaceAll("Mb", "MB")
