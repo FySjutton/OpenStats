@@ -103,7 +103,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
             setting = WordUtils.capitalizeFully(setting.replaceAll("_", " "));
         }
 
-        if (!setting.equals("username")) {
+        if (!(oriSetting.equals("username") || oriSetting.equals("last_server"))) {
             value = WordUtils.capitalizeFully(value);
         }
 
@@ -114,7 +114,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         switch (oriSetting) {
             case "survival_money" -> value += " kr";
             case "survival_experience" -> value += " XP";
-            case "onlinetime" -> value = parseMillis(Long.parseLong(value));
+            case "onlinetime" -> value = parseMillis(value);
             case "creative_rank" -> value = parseCreativeRank(oriValue);
         }
 
@@ -129,31 +129,37 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         return setting + ": §7" + value;
     }
 
-    public static String parseMillis(long millis) {
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
-        long hours = TimeUnit.MILLISECONDS.toHours(millis);
-        long days = TimeUnit.MILLISECONDS.toDays(millis);
-        long months = days / 30; // May not be true as not all months are 30 days, but yeah...
+    public static String parseMillis(String millis) {
+        try {
+            long milliSecs = Long.parseLong(millis);
 
-        days %= 30;
-        hours %= 24;
-        minutes %= 60;
-        seconds %= 60;
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(milliSecs);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(milliSecs);
+            long hours = TimeUnit.MILLISECONDS.toHours(milliSecs);
+            long days = TimeUnit.MILLISECONDS.toDays(milliSecs);
+            long months = days / 30; // May not be true as not all months are 30 days, but yeah...
 
-        StringBuilder sb = new StringBuilder();
+            days %= 30;
+            hours %= 24;
+            minutes %= 60;
+            seconds %= 60;
 
-        if (months > 0) {sb.append(months).append(" mån, ");}
-        if (days > 0) {sb.append(days).append(" d, ");}
-        if (hours > 0) {sb.append(hours).append(" h, ");}
-        if (minutes > 0) {sb.append(minutes).append(" min, ");}
-        if (seconds > 0) {sb.append(seconds).append(" sek");}
+            StringBuilder sb = new StringBuilder();
 
-        if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
-            sb.delete(sb.length() - 2, sb.length());
+            if (months > 0) {sb.append(months).append(" mån, ");}
+            if (days > 0) {sb.append(days).append(" d, ");}
+            if (hours > 0) {sb.append(hours).append(" h, ");}
+            if (minutes > 0) {sb.append(minutes).append(" min, ");}
+            if (seconds > 0) {sb.append(seconds).append(" sek");}
+
+            if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
+                sb.delete(sb.length() - 2, sb.length());
+            }
+
+            return sb.toString();
+        } catch (Exception e) {
+            return millis;
         }
-
-        return sb.toString();
     }
 
     private String parseCreativeRank(String rank) {
