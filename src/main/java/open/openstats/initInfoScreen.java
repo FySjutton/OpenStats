@@ -26,11 +26,11 @@ public class initInfoScreen {
                 JsonElement data = JsonParser.parseString(response.body());
                 MinecraftClient.getInstance().setScreen(new infoScreen(data));
             } catch (Exception e) {
-                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§cOpenStats - " + response.body()));
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats §7- §c" + response.body()));
                 LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
             }
         } catch (Exception e) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§cOpenStats - Error encountered: " + e));
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats§7 - §4Error encountered: §c" + e));
             LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + e + "\"");
         }
     }
