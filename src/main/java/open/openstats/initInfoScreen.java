@@ -15,25 +15,23 @@ import static open.openstats.openStats.LOGGER;
 
 public class initInfoScreen {
     public void fetchProfile(String name) {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://90gqopen.se/api/user/?username=" + name + "&event=true"))
-                .build();
-
-        HttpResponse<String> response = null;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://90gqopen.se/api/user/?username=" + name + "&event=true"))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            try {
+                JsonElement data = JsonParser.parseString(response.body());
+                MinecraftClient.getInstance().setScreen(new infoScreen(data));
+            } catch (Exception e) {
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§cOpenStats - " + response.body()));
+                LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
+            }
         } catch (Exception e) {
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§cOpenStats - Error encountered: " + e));
             LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + e + "\"");
-        }
-
-        try {
-            JsonElement data = JsonParser.parseString(response.body());
-            MinecraftClient.getInstance().setScreen(new infoScreen(data));
-        } catch (Exception e) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§cOpenStats - " + response.body()));
-            LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
         }
     }
 }

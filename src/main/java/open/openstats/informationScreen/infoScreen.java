@@ -13,13 +13,11 @@ import net.minecraft.text.Text;
 
 public class infoScreen extends Screen {
     private static JsonElement data;
-    private final TabManager tabManager = new TabManager(this::addDrawableChild, (child) -> {
-        this.remove(child);
-    });
+    private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
 
     public infoScreen(JsonElement data) {
         super(Text.of("OpenStats"));
-        this.data = data;
+        infoScreen.data = data;
     }
 
     @Override
@@ -36,8 +34,6 @@ public class infoScreen extends Screen {
 
         tabNavigation.selectTab(0, false);
         tabNavigation.init();
-        ScreenRect screenRect = new ScreenRect(0, 24, this.width, this.height - 24 + 1);
-        this.tabManager.setTabArea(screenRect);
     }
 
     @Override
@@ -48,7 +44,7 @@ public class infoScreen extends Screen {
     private class newTab extends GridScreenTab {
         public newTab(String tabName) {
             super(Text.of(tabName));
-            GridWidget.Adder adder = grid.setRowSpacing(9).createAdder(1);
+            GridWidget.Adder adder = grid.createAdder(1);
             if (!tabName.equals("EVENT")) {
                 informationList infoList = new informationList(width, height, tabName, infoScreen.data.getAsJsonObject());
                 adder.add(infoList);
