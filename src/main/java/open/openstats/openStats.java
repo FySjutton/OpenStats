@@ -54,7 +54,7 @@ public class openStats implements ModInitializer {
 
 	private Command<FabricClientCommandSource> createFeedbackExecutor(String alias) {
 		return context -> {
-			context.getSource().sendFeedback(Text.of("§aOpenStats §7- §cDu måste ange en spelare! §7/" + alias + " <spelare>"));
+			context.getSource().sendFeedback(Text.of(Text.translatable("openstats.no_player") + " §7/" + alias + "<spelare>"));
 			return 1;
 		};
 	}

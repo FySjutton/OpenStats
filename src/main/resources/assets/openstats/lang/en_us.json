@@ -1,0 +1,10 @@
+{
+  "openstats.no_player": "§aOpenStats §7- §cYou must input a player name!",
+  "openstats.error_encountered": "§aOpenStats§7 - §4Error encountered: §c",
+
+  "openstats.month": " mon, ",
+  "openstats.second": " sec",
+
+  "openstats.on": "§aOn",
+  "openstats.off": "§cOff"
+}

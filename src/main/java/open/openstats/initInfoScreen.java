@@ -30,7 +30,7 @@ public class initInfoScreen {
                 LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
             }
         } catch (Exception e) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats§7 - §4Error encountered: §c" + e));
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.translatable("openstats.error_encountered").getString() + e));
             LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + e + "\"");
         }
     }

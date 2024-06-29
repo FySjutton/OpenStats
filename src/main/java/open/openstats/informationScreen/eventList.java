@@ -172,7 +172,7 @@ public class eventList extends ElementListWidget<eventList.Entry> {
                 case "lobby_parkour_reward" -> value = "#" + value;
             }
             if (setting.equals("participation") || setting.equals("party_invites") || setting.equals("random_skin") || setting.equals("spectator_visibility")) {
-                value = value.equals("1") ? "§aPå" : "§cAv";
+                value = Text.translatable("openstats." + (value.equals("1") ? "on" : "off")).getString();
             }
 
             if (setting.equals("lobby_visibility")) {
