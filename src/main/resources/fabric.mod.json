@@ -2,17 +2,18 @@
 	"schemaVersion": 1,
 	"id": "openstats",
 	"version": "${version}",
-	"name": "openStats",
-	"description": "En mod som låter dig kolla upp spelare på 90gQopen! Detta görs genom /lookup.",
+	"name": "OpenStats",
+	"description": "En mod som låter dig kolla upp spelare på 90gQopen! Detta görs genom /searchAPI eller /lookup.",
 	"authors": [
 		"Fy17"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/openstats",
-		"sources": "https://github.com/FySjutton/OpenStats"
+		"sources": "https://github.com/FySjutton/OpenStats",
+		"issues": "https://discord.gg/F9mkMxPf9g"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/openstats/icon.png",
+	"icon": "assets/openstats/mod_icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"main": ["open.openstats.openStats"]
