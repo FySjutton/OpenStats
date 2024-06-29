@@ -15,40 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class informationList extends ElementListWidget<informationList.Entry> {
     private JsonObject data;
 
-    private final ArrayList<String> INFO = new ArrayList<>(Arrays.asList(
-            "id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "banned"
-    ));
-
-    private final ArrayList<String> SURVIVAL = new ArrayList<>(Arrays.asList(
-            "survival_money", "survival_experience", "survival_plot_claims", "survival_warp_slots", "survival_quests_completed", "survival_quest_streak", "survival_level"
-    ));
-
-    private final ArrayList<String> CREATIVE = new ArrayList<>(Arrays.asList(
-            "creative_rank"
-    ));
-
-    private final ArrayList<String> MB = new ArrayList<>(Arrays.asList(
-            "mb_games_played", "mb_wins", "mb_winstreak", "mb_points", "mb_hat"
-    ));
-
-    private final ArrayList<String> UHC = new ArrayList<>(Arrays.asList(
-            "uhc_points", "uhc_games_played", "uhc_wins", "uhc_kills", "uhc_deaths"
-    ));
-
-    public informationList(int width, int height, String tabName, JsonObject data) {
+    public informationList(int width, int height, JsonObject data, ArrayList<String> infoList) {
         super(MinecraftClient.getInstance(), width, height - 24, 24, 25);
 
         this.data = data;
-
-        ArrayList<String> selected = switch (tabName) {
-            case "SURVIVAL" -> SURVIVAL;
-            case "CREATIVE" -> CREATIVE;
-            case "MB" -> MB;
-            case "UHC" -> UHC;
-            default -> INFO;
-        };
-
-        for (String x : selected) {
+        for (String x : infoList) {
             addEntry(new Entry(x));
         }
     }
