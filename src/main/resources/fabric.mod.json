@@ -3,7 +3,7 @@
 	"id": "openstats",
 	"version": "${version}",
 	"name": "OpenStats",
-	"description": "En mod som låter dig kolla upp spelare på 90gQopen! Detta görs genom /searchAPI eller /lookup.",
+	"description": "A mod that allows you to lookup players on 90gQopen! /lookup or /searchAPI",
 	"authors": [
 		"Fy17"
 	],
