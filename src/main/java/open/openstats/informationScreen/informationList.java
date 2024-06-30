@@ -118,11 +118,11 @@ public class informationList extends ElementListWidget<informationList.Entry> {
 
             StringBuilder sb = new StringBuilder();
 
-            if (months > 0) {sb.append(months).append(Text.translatable("openstats.month").getString());}
+            if (months > 0) {sb.append(months).append(" mån, ");}
             if (days > 0) {sb.append(days).append(" d, ");}
             if (hours > 0) {sb.append(hours).append(" h, ");}
             if (minutes > 0) {sb.append(minutes).append(" min, ");}
-            if (seconds > 0) {sb.append(seconds).append(Text.translatable("openstats.second").getString());}
+            if (seconds > 0) {sb.append(seconds).append(" sek");}
 
             if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
                 sb.delete(sb.length() - 2, sb.length());
