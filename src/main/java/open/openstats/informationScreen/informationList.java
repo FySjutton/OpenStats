@@ -138,7 +138,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         switch (rank) {
             case "newbie" -> rank = "§aNybörjare";
             case "apprentice" -> rank = "§bLärling";
-            case "experienced" -> rank = "§dErfaren!";
+            case "experienced" -> rank = "§dErfaren";
             case "expert" -> rank = "§5Expert";
             case "architect" -> rank = "§6Arkitekt";
         }
