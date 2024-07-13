@@ -17,7 +17,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
     private JsonObject data;
 
     public informationList(int width, int height, JsonObject data, ArrayList<String> infoList) {
-        super(MinecraftClient.getInstance(), width, height - 24, 24, 25);
+        super(MinecraftClient.getInstance(), width, height - 24 - 25 - 10, 24 + 25 + 10, 25);
 
         this.data = data;
         for (String x : infoList) {
