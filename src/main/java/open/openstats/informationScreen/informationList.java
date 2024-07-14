@@ -15,23 +15,23 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class informationList extends ElementListWidget<informationList.Entry> {
-    private JsonObject data;
-    private LinkedHashMap<String, Boolean> view = new LinkedHashMap<>();
+    private final JsonObject data;
+    private final LinkedHashMap<String, Boolean> view = new LinkedHashMap<>();
     private LinkedHashMap<String, ArrayList<String>> informationList;
 
     public informationList(int width, int height, JsonObject data, LinkedHashMap<String, ArrayList<String>> infoList) {
-        super(MinecraftClient.getInstance(), width, height - 24 - 25 - 10, 24 + 25 + 10, 25);
+        super(MinecraftClient.getInstance(), width, height - 24 - 15 - 10, 24 + 15 + 10, 25);
 
         this.data = data;
-        updateViewList(infoList);
+        updateViewList(infoList, false);
     }
 
-    public void updateViewList(LinkedHashMap<String, ArrayList<String>> infoList) {
+    public void updateViewList(LinkedHashMap<String, ArrayList<String>> infoList, boolean search) {
         view.clear();
 
         for (String x : infoList.keySet()) {
             if (!x.equals("uncategorized")) {
-                view.put(x, false);
+                view.put(x, search);
             }
         }
 
@@ -82,13 +82,17 @@ public class informationList extends ElementListWidget<informationList.Entry> {
                         .dimensions((int) (width * 0.1), 0, (int) (width * 0.8), 20)
                         .build();
             } else {
-                String value;
-                try {
-                    value = data.get(setting).getAsString();
-                } catch (Exception e) {
-                    value = "";
+                if (!setting.equals("noResults")) {
+                    String value;
+                    try {
+                        value = data.get(setting).getAsString();
+                    } catch (Exception e) {
+                        value = "";
+                    }
+                    this.displayText = getText(setting, value);
+                } else {
+                    this.displayText = "§cInga resultat!";
                 }
-                this.displayText = getText(setting, value);
             }
         }
 

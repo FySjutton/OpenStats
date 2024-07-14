@@ -1,20 +1,22 @@
 package open.openstats.informationScreen;
 
 import com.google.gson.JsonElement;
+
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tab.GridScreenTab;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.gui.widget.TabButtonWidget;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import static open.openstats.openStats.LOGGER;
+import java.util.List;
 
 public class infoScreen extends Screen {
     private static JsonElement data;
@@ -32,7 +34,7 @@ public class infoScreen extends Screen {
         Tab[] tabs = new Tab[informationLines.size()];
         int index = 0;
         for (String x : informationLines.keySet()) {
-            tabs[index] = new newTab(x.toUpperCase(), informationLines.get(x));
+            tabs[index] = new newTab(x, informationLines.get(x));
             index++;
         }
 
@@ -41,7 +43,6 @@ public class infoScreen extends Screen {
 
         searchField searchbar = new searchField(textRenderer, width, this);
         this.addDrawableChild(searchbar);
-
         tabNavigation.selectTab(0, false);
         tabNavigation.init();
     }
@@ -49,7 +50,7 @@ public class infoScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.drawGuiTexture(SEARCH_ICON, width / 2 - width / 6 - 14, 31, 12, 12);
+        context.drawGuiTexture(SEARCH_ICON, width / 2 - width / 6 - 15, 31, 12, 12);
     }
 
     private class newTab extends GridScreenTab {
@@ -64,9 +65,30 @@ public class infoScreen extends Screen {
     }
 
     public void search(String text) {
-        LOGGER.info("Searching for \"" + text + "\"...");
-        LinkedHashMap<String, ArrayList<String>> searchResults = new LinkedHashMap<>();
+        for (Element tab : ((TabNavigationWidget) this.children().get(0)).children()) {
+            newTab tabElm = (newTab) ((TabButtonWidget) tab).getTab();
+            if (!text.isEmpty()) {
+                LinkedHashMap<String, ArrayList<String>> categoryElm = informationLines.get(tabElm.getTitle().getString());
+                LinkedHashMap<String, ArrayList<String>> searchResults = new LinkedHashMap<>();
 
-        ((newTab) this.tabManager.getCurrentTab()).infoList.updateViewList(searchResults);
+                for (String category : categoryElm.keySet()) {
+                    ArrayList<String> matches = new ArrayList<>();
+                    for (String stat : categoryElm.get(category)) {
+                        if (stat.replaceAll("_" ,"").toLowerCase().contains(text.toLowerCase())) {
+                            matches.add(stat);
+                        }
+                    }
+                    if (!matches.isEmpty()) {
+                        searchResults.put(category, matches);
+                    }
+                }
+                if (searchResults.isEmpty()) {
+                    searchResults.put("uncategorized", new ArrayList<>(List.of("noResults")));
+                }
+                tabElm.infoList.updateViewList(searchResults, true);
+            } else {
+                tabElm.infoList.updateViewList(informationLines.get(tabElm.getTitle().getString()), false);
+            }
+        }
     }
 }

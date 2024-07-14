@@ -31,7 +31,7 @@ public class infoLines {
 
         LinkedHashMap<String, ArrayList<String>> event = new LinkedHashMap<>();
         event.put("INFO", new ArrayList<>(Arrays.asList("event_wins", "gold", "gold_earned", "mvps", "participation", "party_invites", "lobby_visibility", "random_skin", "spectator_visibility", "lobby_parkour_time", "lobby_parkour_reward")));
-        event.put("ANVIL", new ArrayList<>(Arrays.asList("event_wins", "gold", "gold_earned", "mvps", "participation", "party_invites", "lobby_visibility", "random_skin", "spectator_visibility", "lobby_parkour_time", "lobby_parkour_reward")));
+        event.put("ANVIL", new ArrayList<>(Arrays.asList("anvil_games_played", "anvil_wins", "anvil_gold_earned")));
         event.put("BORDER RUNNERS", new ArrayList<>(Arrays.asList("border_runners_games_played", "border_runners_wins", "border_runners_gold_earned", "border_runners_rounds_survived", "border_runners_powerups_used", "border_runners_most_rounds_survived")));
         event.put("DRAGONS", new ArrayList<>(Arrays.asList("dragons_games_played", "dragons_wins", "dragons_gold_earned", "dragons_arrows_shot", "dragons_arrows_hit", "dragons_leaps_used", "dragons_crates_destroyed")));
         event.put("INFECTION", new ArrayList<>(Arrays.asList("infection_games_played", "infection_wins", "infection_gold_earned", "infection_alpha_games", "infection_infected_kills", "infection_survivor_kills", "infection_most_kills_infected", "infection_most_kills_survivor")));
