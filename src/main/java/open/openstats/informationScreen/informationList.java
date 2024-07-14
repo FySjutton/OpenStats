@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.text.WordUtils;
@@ -15,13 +16,44 @@ import java.util.concurrent.TimeUnit;
 
 public class informationList extends ElementListWidget<informationList.Entry> {
     private JsonObject data;
+    private LinkedHashMap<String, Boolean> view = new LinkedHashMap<>();
+    private LinkedHashMap<String, ArrayList<String>> informationList;
 
-    public informationList(int width, int height, JsonObject data, ArrayList<String> infoList) {
+    public informationList(int width, int height, JsonObject data, LinkedHashMap<String, ArrayList<String>> infoList) {
         super(MinecraftClient.getInstance(), width, height - 24 - 25 - 10, 24 + 25 + 10, 25);
 
         this.data = data;
-        for (String x : infoList) {
-            addEntry(new Entry(x));
+        updateViewList(infoList);
+    }
+
+    public void updateViewList(LinkedHashMap<String, ArrayList<String>> infoList) {
+        view.clear();
+
+        for (String x : infoList.keySet()) {
+            if (!x.equals("uncategorized")) {
+                view.put(x, false);
+            }
+        }
+
+        informationList = infoList;
+        updateEntries();
+    }
+
+    public void updateEntries() {
+        clearEntries();
+        for (String category : informationList.keySet()) {
+            if (!category.equals("uncategorized")) {
+                addEntry(new Entry(true, category));
+                if (view.get(category)) {
+                    for (String stat : informationList.get(category)) {
+                        addEntry(new Entry(false, stat));
+                    }
+                }
+            } else {
+                for (String stat : informationList.get(category)) {
+                    addEntry(new Entry(false, stat));
+                }
+            }
         }
     }
 
@@ -35,41 +67,70 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         return width - 15;
     }
 
+    @Override
+    protected void drawMenuListBackground(DrawContext context) {} // Removes the dark overlay
+
     public class Entry extends ElementListWidget.Entry<Entry> {
-        private final String displayText;
+        private String displayText;
+        private ButtonWidget button;
+
         private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
-        public Entry(String setting) {
-            String value;
-            try {
-                value = data.get(setting).getAsString();
-            } catch (Exception e) {
-                value = "";
+        public Entry(Boolean button, String setting) {
+            if (button) {
+                this.button = ButtonWidget.builder(Text.of(setting.replace("_", " ")), btn -> toggleButton(setting))
+                        .dimensions((int) (width * 0.1), 0, (int) (width * 0.8), 20)
+                        .build();
+            } else {
+                String value;
+                try {
+                    value = data.get(setting).getAsString();
+                } catch (Exception e) {
+                    value = "";
+                }
+                this.displayText = getText(setting, value);
             }
-            this.displayText = getText(setting, value);
         }
 
         @Override
         public List<? extends Selectable> selectableChildren() {
-            return List.of();
+            List<Selectable> children = new ArrayList<>();
+            if (button != null) {
+                children.add(button);
+            }
+            return children;
         }
 
         @Override
         public List<? extends Element> children() {
-            return List.of();
+            List<Element> children = new ArrayList<>();
+            if (button != null) {
+                children.add(button);
+            }
+            return children;
         }
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawCenteredTextWithShadow(textRenderer, displayText, width / 2, y + entryHeight / 2 - 9 / 2, 0xFFFFFF);
+            if (button != null) {
+                button.setY(y);
+                button.render(context, mouseX, mouseY, tickDelta);
+            } else {
+                context.drawCenteredTextWithShadow(textRenderer, displayText, width / 2, y + entryHeight / 2 - 9 / 2, 0xFFFFFF);
+            }
         }
+    }
+
+    private void toggleButton(String btn) {
+        view.replace(btn, !view.get(btn));
+        updateEntries();
     }
 
     private String getText(String oriSetting, String oriValue) {
         String setting = oriSetting;
         String value = oriValue;
 
-        if (setting.equals("id") || setting.equals("uuid")) {
+        if (Arrays.asList("id", "uuid").contains(setting)) {
             setting = setting.toUpperCase();
         } else if (!setting.equals("gQmynt")) {
             setting = WordUtils.capitalizeFully(setting.replaceAll("_", " "));
@@ -80,14 +141,33 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         }
 
         setting = setting
+                .replaceAll("Tnt", "TNT")
+                .replaceAll("Sg", "SG")
+                .replaceAll("Oitc", "OITC")
+                .replaceAll("Mvp", "MVP")
                 .replaceAll("Mb", "MB")
                 .replaceAll("Uhc", "UHC");
 
         switch (oriSetting) {
             case "survival_money" -> value += " kr";
             case "survival_experience" -> value += " XP";
-            case "onlinetime" -> value = parseMillis(value);
+            case "onlinetime" -> value = parseMillis(oriValue);
             case "creative_rank" -> value = parseCreativeRank(oriValue);
+            case "oitc_longest_bow_kill" -> value += " blocks";
+            case "lobby_parkour_time" -> value = parkourTime(oriValue);
+            case "lobby_parkour_reward" -> value = "#" + value;
+        }
+
+        if (oriSetting.equals("participation") || oriSetting.equals("party_invites") || oriSetting.equals("random_skin") || oriSetting.equals("spectator_visibility")) {
+            value = Text.translatable("openstats." + (oriValue.equals("1") ? "on" : "off")).getString();
+        }
+
+        if (oriSetting.equals("lobby_visibility")) {
+            switch (value) {
+                case "0" -> value = "§aAlla";
+                case "1" -> value = "§dParty";
+                case "2" -> value = "§8Ingen";
+            }
         }
 
         if (oriValue.isEmpty()) {
@@ -101,7 +181,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         return setting + ": §7" + value;
     }
 
-    public static String parseMillis(String millis) {
+    private static String parseMillis(String millis) {
         try {
             long milliSecs = Long.parseLong(millis);
 
@@ -143,5 +223,18 @@ public class informationList extends ElementListWidget<informationList.Entry> {
             case "architect" -> rank = "§6Arkitekt";
         }
         return rank;
+    }
+
+    private static String parkourTime(String millis) {
+        try {
+            long milliSecs = Long.parseLong(millis);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(milliSecs);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(milliSecs) % 60;
+            long milliseconds = milliSecs % 1000;
+
+            return String.format("%02d:%02d.%03d", minutes, seconds, milliseconds);
+        } catch (Exception e) {
+            return millis;
+        }
     }
 }

@@ -24,7 +24,14 @@ public class initInfoScreen {
 
             try {
                 JsonElement data = JsonParser.parseString(response.body());
-                MinecraftClient.getInstance().setScreen(new infoScreen(data));
+                try {
+                    MinecraftClient.getInstance().setScreen(new infoScreen(data));
+                } catch (Exception e) {
+                    MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.of(Text.translatable("openstats.error_encountered").getString() + e)));
+                    LOGGER.error("Error encountered in screen: " + e);
+                    MinecraftClient.getInstance().setScreen(null);
+                    e.printStackTrace();
+                }
             } catch (Exception e) {
                 MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats §7- §c" + response.body()));
                 LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
