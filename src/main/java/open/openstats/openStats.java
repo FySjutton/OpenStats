@@ -1,5 +1,7 @@
 package open.openstats;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,6 +15,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
+import open.openstats.informationScreen.infoScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +29,7 @@ public class openStats implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-			LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("lookup")
+			LiteralArgumentBuilder<FabricClientCommandSource> lookupCommand = ClientCommandManager.literal("lookup")
 					.executes(createFeedbackExecutor("lookup"))
 					.then(ClientCommandManager.argument("player", StringArgumentType.string())
 						.suggests((context, builder) -> CommandSource.suggestMatching(getOnlinePlayerNames(), builder))
@@ -34,15 +37,45 @@ public class openStats implements ModInitializer {
 							String playerName = StringArgumentType.getString(context, "player");
 							MinecraftClient client = MinecraftClient.getInstance();
 							// When executing a command the current screen will automatically be closed (the chat hud), this delays the new screen to open, so it won't close instantly
-							client.send(() -> new initInfoScreen().fetchProfile(playerName));
+							client.send(() -> {
+								JsonElement info = new fetchInformation().fetchProfile(playerName);
+								if (info != null) {
+									MinecraftClient.getInstance().setScreen(new infoScreen(info));
+								}
+							});
 							return 1;
 						})
 					);
-			LiteralCommandNode<FabricClientCommandSource> registeredCommand = dispatcher.register(command);
+			LiteralCommandNode<FabricClientCommandSource> regLookupCommand = dispatcher.register(lookupCommand);
 
-			registerAlias(dispatcher, "searchAPI", registeredCommand);
-			registerAlias(dispatcher, "openStats:searchAPI", registeredCommand);
-			registerAlias(dispatcher, "openStats:lookup", registeredCommand);
+			registerAlias(dispatcher, "searchAPI", regLookupCommand);
+			registerAlias(dispatcher, "openStats:searchAPI", regLookupCommand);
+			registerAlias(dispatcher, "openStats:lookup", regLookupCommand);
+
+			// "/seen" command
+			LiteralArgumentBuilder<FabricClientCommandSource> seenCommand = ClientCommandManager.literal("seen")
+					.executes(createFeedbackExecutor("seen"))
+					.then(ClientCommandManager.argument("player", StringArgumentType.string())
+							.suggests((context, builder) -> CommandSource.suggestMatching(getOnlinePlayerNames(), builder))
+							.executes(context -> {
+								String playerName = StringArgumentType.getString(context, "player");
+								MinecraftClient client = MinecraftClient.getInstance();
+								client.send(() -> {
+									JsonElement data = new fetchInformation().fetchProfile(playerName);
+									if (data != null) {
+										JsonObject info = data.getAsJsonObject();
+										MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats§7 - §6" + info.get("username").getAsString() + "§e was last online at §6" + info.get("last_online").getAsString() + "§e in §6" + info.get("last_server").getAsString() + "§e."));
+									}
+								});
+								return 1;
+							})
+					);
+			LiteralCommandNode<FabricClientCommandSource> regSeenCommand = dispatcher.register(seenCommand);
+
+			registerAlias(dispatcher, "lastonline", regSeenCommand);
+			registerAlias(dispatcher, "openStats:lastonline", regSeenCommand);
+			registerAlias(dispatcher, "openStats:seen", regSeenCommand);
+
 		});
 	}
 

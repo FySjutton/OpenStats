@@ -13,8 +13,8 @@ import java.net.http.HttpResponse;
 
 import static open.openstats.openStats.LOGGER;
 
-public class initInfoScreen {
-    public void fetchProfile(String name) {
+public class fetchInformation {
+    public JsonElement fetchProfile(String name) {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -23,15 +23,7 @@ public class initInfoScreen {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             try {
-                JsonElement data = JsonParser.parseString(response.body());
-                try {
-                    MinecraftClient.getInstance().setScreen(new infoScreen(data));
-                } catch (Exception e) {
-                    MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.of(Text.translatable("openstats.error_encountered").getString() + e)));
-                    LOGGER.error("Error encountered in screen: " + e);
-                    MinecraftClient.getInstance().setScreen(null);
-                    e.printStackTrace();
-                }
+                return JsonParser.parseString(response.body());
             } catch (Exception e) {
                 MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats §7- §c" + response.body()));
                 LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
@@ -40,5 +32,6 @@ public class initInfoScreen {
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.translatable("openstats.error_encountered").getString() + e));
             LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + e + "\"");
         }
+        return null;
     }
 }
