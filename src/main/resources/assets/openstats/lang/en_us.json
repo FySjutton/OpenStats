@@ -3,5 +3,7 @@
   "openstats.error_encountered": "§aOpenStats§7 - §4Error encountered: §c",
 
   "openstats.on": "§aOn",
-  "openstats.off": "§cOff"
+  "openstats.off": "§cOff",
+
+  "openstats.seen.response": "§aOpenStats§7 - §6%s§e last logged out at §6%s§e from §6%s§e."
 }

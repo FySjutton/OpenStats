@@ -64,7 +64,12 @@ public class openStats implements ModInitializer {
 									JsonElement data = new fetchInformation().fetchProfile(playerName);
 									if (data != null) {
 										JsonObject info = data.getAsJsonObject();
-										MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats§7 - §6" + info.get("username").getAsString() + "§e was last online at §6" + info.get("last_online").getAsString() + "§e in §6" + info.get("last_server").getAsString() + "§e."));
+										MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(
+												String.format(Text.translatable("openstats.seen.response").getString(),
+												info.get("username").getAsString(),
+												info.get("last_online").getAsString(),
+												info.get("last_server").getAsString())
+										));
 									}
 								});
 								return 1;

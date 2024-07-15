@@ -3,5 +3,7 @@
   "openstats.error_encountered": "§aOpenStats§7 - §4Error hittades: §c",
 
   "openstats.on": "§aPå",
-  "openstats.off": "§cAv"
+  "openstats.off": "§cAv",
+
+  "openstats.seen.response": "§aOpenStats§7 - §6%s§e loggade senast ut §6%s§e från §6%s§e."
 }
