@@ -1,6 +1,7 @@
 {
   "openstats.no_player": "§aOpenStats §7- §cYou must input a player name!",
   "openstats.error_encountered": "§aOpenStats§7 - §4Error encountered: §c",
+  "openstats.no_result": "§cNo results found!",
 
   "openstats.on": "§aOn",
   "openstats.off": "§cOff",

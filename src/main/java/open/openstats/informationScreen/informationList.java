@@ -91,7 +91,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
                     }
                     this.displayText = getText(setting, value);
                 } else {
-                    this.displayText = "§cInga resultat!";
+                    this.displayText = Text.translatable("openstats.no_result").getString();
                 }
             }
         }
