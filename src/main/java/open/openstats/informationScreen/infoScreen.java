@@ -74,7 +74,7 @@ public class infoScreen extends Screen {
                 for (String category : categoryElm.keySet()) {
                     ArrayList<String> matches = new ArrayList<>();
                     for (String stat : categoryElm.get(category)) {
-                        if (stat.replaceAll("_" ,"").toLowerCase().contains(text.toLowerCase())) {
+                        if (stat.replaceAll("_" ," ").toLowerCase().contains(text.toLowerCase())) {
                             matches.add(stat);
                         }
                     }
