@@ -1,7 +1,46 @@
-OpenStats is a client side minecraft mod that allows you to lookup information about other people on 90gQopen.se.
+![OpenStats Banner](https://cdn.modrinth.com/data/cached_images/a20931899e420891e0dfbbb376feb81378e4860b.png)
+OpenStats is a fabric mod that allows you to look up information about players on the minecraft server 90gQopen!
 
-To lookup another user, use the `/lookup <player>` command in game (alias `/searchAPI`).
+If you want to get notified when a new version of the mod arrives, feel free to join my [discord server](https://discord.gg/F9mkMxPf9g) and select the `@OpenStats` role!
 
-You may download the mod from [modrinth](https://modrinth.com/mod/openstats).
+You can download the mod from [modrinth](https://modrinth.com/mod/openstats).
 
-**Warning:** In case 90gQopen makes any changes to their API, the current version will most likely stop working instantly. If this happens, go to modrinth and I'll post a fixed version.
+## Lookup Command
+The `/lookup` command is the main command of this mod, and it opens the full information screen.
+
+**Usage:** `/lookup <player>`
+
+**Alias:** `/searchAPI`
+
+
+<details>
+<summary>Showcase:</summary>
+
+![Lookup showcase 1](https://cdn.modrinth.com/data/cached_images/fee3bebcc87670deb412cbed67a49bd1cb063919.png)
+
+![Lookup showcase 2](https://cdn.modrinth.com/data/cached_images/10104e6fcff188760944c927f5c7db60b1b7c7cb.png)
+
+![Lookup showcase 3](https://cdn.modrinth.com/data/cached_images/2a38e2adfda5a670b9717ef443d780faa18474c1.png)
+</details>
+
+
+
+## Seen Command
+The mod also adds a `/seen` command that you can use to quickly check when a player last logged off. While this is possible in the main command aswell, this might be faster.
+
+**Usage:** `/seen <player>`
+
+**Alias:** `/lastonline`
+
+
+<details>
+<summary>Spoiler</summary>
+
+![Seen command response showcase](https://cdn.modrinth.com/data/cached_images/3d139fb48f75971e57f4572d178114b9aa8f6d3d.png)
+
+</details>
+
+
+---
+
+**Warning:** In case 90gQopen makes any changes to their public API, the current version will most likely stop working instantly. You'll then have to reinstall a fix-version.
