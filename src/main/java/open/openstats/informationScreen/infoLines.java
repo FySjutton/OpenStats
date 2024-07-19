@@ -10,7 +10,7 @@ public class infoLines {
 
     static {
         LinkedHashMap<String, ArrayList<String>> INFO = new LinkedHashMap<>();
-        INFO.put("uncategorized", new ArrayList<>(Arrays.asList("id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "banned")));
+        INFO.put("uncategorized", new ArrayList<>(Arrays.asList("id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "parkourservern_whitelist", "banned")));
         informationLines.put("INFO", INFO);
 
         LinkedHashMap<String, ArrayList<String>> SURVIVAL = new LinkedHashMap<>();
@@ -37,6 +37,7 @@ public class infoLines {
         event.put("INFECTION", new ArrayList<>(Arrays.asList("infection_games_played", "infection_wins", "infection_gold_earned", "infection_alpha_games", "infection_infected_kills", "infection_survivor_kills", "infection_most_kills_infected", "infection_most_kills_survivor")));
         event.put("MAZE", new ArrayList<>(Arrays.asList("maze_games_played", "maze_wins", "maze_gold_earned")));
         event.put("OITC", new ArrayList<>(Arrays.asList("oitc_games_played", "oitc_wins", "oitc_gold_earned", "oitc_melee_kills", "oitc_ranged_kills", "oitc_deaths", "oitc_arrows_shot", "oitc_highest_kill_streak", "oitc_longest_bow_kill")));
+        event.put("PAINTBALL", new ArrayList<>(Arrays.asList("paintball_games_played", "paintball_wins", "paintball_gold_earned", "paintball_shots_fired", "paintball_shots_hit", "paintball_kills", "paintball_deaths", "paintball_powerups_used", "paintball_most_kills", "paintball_highest_kill_streak")));
         event.put("PARKOUR RUN", new ArrayList<>(Arrays.asList("parkour_games_played", "parkour_wins", "parkour_gold_earned", "parkour_rounds_survived", "parkour_most_rounds_survived")));
         event.put("RED ROVER", new ArrayList<>(Arrays.asList("red_rover_games_played", "red_rover_wins", "red_rover_gold_earned", "red_rover_killer_games", "red_rover_rounds_survived", "red_rover_kills", "red_rover_dashes", "red_rover_most_rounds_survived")));
         event.put("SNOW FIGHT", new ArrayList<>(Arrays.asList("snow_fight_games_played", "snow_fight_wins", "snow_fight_gold_earned", "snow_fight_kills", "snow_fight_snowballs_thrown", "snow_fight_snowballs_hit")));
