@@ -51,36 +51,6 @@ public class openStats implements ModInitializer {
 			registerAlias(dispatcher, "searchAPI", regLookupCommand);
 			registerAlias(dispatcher, "openStats:searchAPI", regLookupCommand);
 			registerAlias(dispatcher, "openStats:lookup", regLookupCommand);
-
-			// "/seen" command
-			LiteralArgumentBuilder<FabricClientCommandSource> seenCommand = ClientCommandManager.literal("seen")
-					.executes(createFeedbackExecutor("seen"))
-					.then(ClientCommandManager.argument("player", StringArgumentType.string())
-							.suggests((context, builder) -> CommandSource.suggestMatching(getOnlinePlayerNames(), builder))
-							.executes(context -> {
-								String playerName = StringArgumentType.getString(context, "player");
-								MinecraftClient client = MinecraftClient.getInstance();
-								client.send(() -> {
-									JsonElement data = new fetchInformation().fetchProfile(playerName);
-									if (data != null) {
-										JsonObject info = data.getAsJsonObject();
-										MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(
-												String.format(Text.translatable("openstats.seen.response").getString(),
-												info.get("username").getAsString(),
-												info.get("last_online").getAsString(),
-												info.get("last_server").getAsString())
-										));
-									}
-								});
-								return 1;
-							})
-					);
-			LiteralCommandNode<FabricClientCommandSource> regSeenCommand = dispatcher.register(seenCommand);
-
-			registerAlias(dispatcher, "lastonline", regSeenCommand);
-			registerAlias(dispatcher, "openStats:lastonline", regSeenCommand);
-			registerAlias(dispatcher, "openStats:seen", regSeenCommand);
-
 		});
 	}
 

@@ -4,7 +4,5 @@
   "openstats.no_result": "§cInga resultat hittades!",
 
   "openstats.on": "§aPå",
-  "openstats.off": "§cAv",
-
-  "openstats.seen.response": "§aOpenStats§7 - §6%s§e loggade senast ut §6%s§e från §6%s§e."
+  "openstats.off": "§cAv"
 }

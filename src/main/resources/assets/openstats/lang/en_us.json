@@ -4,7 +4,5 @@
   "openstats.no_result": "§cNo results found!",
 
   "openstats.on": "§aOn",
-  "openstats.off": "§cOff",
-
-  "openstats.seen.response": "§aOpenStats§7 - §6%s§e last logged out at §6%s§e from §6%s§e."
+  "openstats.off": "§cOff"
 }

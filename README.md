@@ -23,24 +23,6 @@ The `/lookup` command is the main command of this mod, and it opens the full inf
 ![Lookup showcase 3](https://cdn.modrinth.com/data/cached_images/2a38e2adfda5a670b9717ef443d780faa18474c1.png)
 </details>
 
-
-
-## Seen Command
-The mod also adds a `/seen` command that you can use to quickly check when a player last logged off. While this is possible in the main command aswell, this might be faster.
-
-**Usage:** `/seen <player>`
-
-**Alias:** `/lastonline`
-
-
-<details>
-<summary>Spoiler</summary>
-
-![Seen command response showcase](https://cdn.modrinth.com/data/cached_images/3d139fb48f75971e57f4572d178114b9aa8f6d3d.png)
-
-</details>
-
-
 ---
 
-**Warning:** In case 90gQopen makes any changes to their public API, the current version will most likely stop working instantly. You'll then have to reinstall a fix-version.
+**Warning:** In case 90gQopen makes any changes to their public API, the current version will likely stop working instantly. You'll then have to reinstall a fix-version.
