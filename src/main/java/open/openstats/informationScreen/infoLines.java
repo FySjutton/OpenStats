@@ -10,7 +10,7 @@ public class infoLines {
 
     static {
         LinkedHashMap<String, ArrayList<String>> INFO = new LinkedHashMap<>();
-        INFO.put("uncategorized", new ArrayList<>(Arrays.asList("id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "parkourservern_whitelist", "banned")));
+        INFO.put("uncategorized", new ArrayList<>(Arrays.asList("id", "uuid", "username", "gQmynt", "onlinetime", "last_online", "last_server", "rank", "friend_count", "parkourservern_whitelist", "banned")));
         informationLines.put("INFO", INFO);
 
         LinkedHashMap<String, ArrayList<String>> SURVIVAL = new LinkedHashMap<>();
