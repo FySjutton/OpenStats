@@ -6,7 +6,6 @@ import com.sipgate.mp3wav.Converter;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.AudioStream;
 import net.minecraft.text.Text;
 
 import javax.sound.sampled.*;
@@ -83,11 +82,9 @@ public class mbSocket {
         Map<String, String> authMap = new HashMap<>();
         authMap.put("name", playerName);
 
-        options = IO.Options.builder()
-                .setAuth(authMap)
-                .setSecure(true)
-                .setReconnection(true)
-                .build();
+        options = new IO.Options();
+        options.auth = authMap;
+        options.reconnection = true;
 
         try {
             socket = IO.socket("https://mbn.k55.se", options);

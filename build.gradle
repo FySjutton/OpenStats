@@ -1,6 +1,13 @@
 plugins {
 	id 'fabric-loom' version '1.7-SNAPSHOT'
-	id 'maven-publish'
+	id 'java'
+}
+
+
+repositories {
+	mavenCentral()
+	maven { url 'https://maven.fabricmc.net/' }
+	// Additional repositories if needed
 }
 
 version = project.mod_version
@@ -14,12 +21,23 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
-	implementation 'io.socket:socket.io-client:2.0.1'
-    implementation 'com.sipgate:mp3-wav:1.0.4'
+	// below is + 666 kb
+	include implementation('io.socket:socket.io-client:2.1.1')
+	include implementation('io.socket:engine.io-client:2.1.0')
+	include implementation('com.squareup.okhttp3:okhttp:3.12.12')
+	include implementation('com.squareup.okio:okio:1.15.0')
+	include implementation('org.json:json:20090211')
 
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	// below is + 517kb
+	include implementation('com.sipgate:mp3-wav:1.0.4')
+	include implementation('javazoom:jlayer:1.0.1')
+	include implementation('com.googlecode.soundlibs:mp3spi:1.9.5.4')
+	include implementation('com.googlecode.soundlibs:jlayer:1.0.1.4')
+	include implementation('junit:junit:3.8.2')
+	include implementation('com.googlecode.soundlibs:tritonus-share:0.3.7.4')
+
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
 }
 
 processResources {
