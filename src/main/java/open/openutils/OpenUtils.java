@@ -1,7 +1,6 @@
-package open.openstats;
+package open.openutils;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -16,15 +15,12 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import open.openstats.informationScreen.infoScreen;
+import open.openutils.informationScreen.InfoScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +29,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class openStats implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("openstats");
-	private mbSocket musicSocket;
+public class OpenUtils implements ModInitializer {
+    public static final Logger LOGGER = LoggerFactory.getLogger("openutils");
+	private MBSocket musicSocket;
 	private Thread socketThread;
 
 	private String playerName = "";
@@ -52,7 +48,7 @@ public class openStats implements ModInitializer {
 			socketThread.interrupt();
 		}
 
-		musicSocket = new mbSocket();
+		musicSocket = new MBSocket();
 		socketThread = new Thread(() -> {
 			musicSocket.setupSocket(playerName);
 		});
@@ -109,9 +105,9 @@ public class openStats implements ModInitializer {
 							MinecraftClient client = MinecraftClient.getInstance();
 							// When executing a command the current screen will automatically be closed (the chat hud), this delays the new screen to open, so it won't close instantly
 							client.send(() -> {
-								JsonElement info = new fetchInformation().fetchProfile(playerName);
+								JsonElement info = new FetchInformation().fetchProfile(playerName);
 								if (info != null) {
-									MinecraftClient.getInstance().setScreen(new infoScreen(info));
+									MinecraftClient.getInstance().setScreen(new InfoScreen(info));
 								}
 							});
 							return 1;
@@ -120,8 +116,8 @@ public class openStats implements ModInitializer {
 			LiteralCommandNode<FabricClientCommandSource> regLookupCommand = dispatcher.register(lookupCommand);
 
 			registerAlias(dispatcher, "searchAPI", regLookupCommand);
-			registerAlias(dispatcher, "openStats:searchAPI", regLookupCommand);
-			registerAlias(dispatcher, "openStats:lookup", regLookupCommand);
+			registerAlias(dispatcher, "openUtils:searchAPI", regLookupCommand);
+			registerAlias(dispatcher, "openUtils:lookup", regLookupCommand);
 
 			LiteralArgumentBuilder<FabricClientCommandSource> setVolume = ClientCommandManager.literal("set_volume")
 					.executes(createFeedbackExecutor("set_volume"))
@@ -145,7 +141,7 @@ public class openStats implements ModInitializer {
 
 	private Command<FabricClientCommandSource> createFeedbackExecutor(String alias) {
 		return context -> {
-			context.getSource().sendFeedback(Text.of(Text.translatable("openstats.no_player").getString() + " §7/" + alias + " <player>"));
+			context.getSource().sendFeedback(Text.of(Text.translatable("openutils.no_player").getString() + " §7/" + alias + " <player>"));
 			return 1;
 		};
 	}

@@ -1,0 +1,8 @@
+{
+  "openutils.no_player": "§aOpenUtils §7- §cDu måste ange en spelare!",
+  "openutils.error_encountered": "§aOpenUtils§7 - §4Error hittades: §c",
+  "openutils.no_result": "§cInga resultat hittades!",
+
+  "openutils.on": "§aPå",
+  "openutils.off": "§cAv"
+}

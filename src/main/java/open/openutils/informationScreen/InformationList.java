@@ -1,4 +1,4 @@
-package open.openstats.informationScreen;
+package open.openutils.informationScreen;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
@@ -14,12 +14,12 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class informationList extends ElementListWidget<informationList.Entry> {
+public class InformationList extends ElementListWidget<InformationList.Entry> {
     private final JsonObject data;
     private final LinkedHashMap<String, Boolean> view = new LinkedHashMap<>();
     private LinkedHashMap<String, ArrayList<String>> informationList;
 
-    public informationList(int width, int height, JsonObject data, LinkedHashMap<String, ArrayList<String>> infoList) {
+    public InformationList(int width, int height, JsonObject data, LinkedHashMap<String, ArrayList<String>> infoList) {
         super(MinecraftClient.getInstance(), width, height - 24 - 15 - 10, 24 + 15 + 10, 25);
 
         this.data = data;
@@ -91,7 +91,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
                     }
                     this.displayText = getText(setting, value);
                 } else {
-                    this.displayText = Text.translatable("openstats.no_result").getString();
+                    this.displayText = Text.translatable("openutils.no_result").getString();
                 }
             }
         }
@@ -163,7 +163,7 @@ public class informationList extends ElementListWidget<informationList.Entry> {
         }
 
         if (oriSetting.equals("participation") || oriSetting.equals("party_invites") || oriSetting.equals("random_skin") || oriSetting.equals("spectator_visibility")) {
-            value = Text.translatable("openstats." + (oriValue.equals("1") ? "on" : "off")).getString();
+            value = Text.translatable("openutils." + (oriValue.equals("1") ? "on" : "off")).getString();
         }
 
         if (oriSetting.equals("lobby_visibility")) {

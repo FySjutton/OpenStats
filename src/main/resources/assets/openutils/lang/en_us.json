@@ -1,0 +1,8 @@
+{
+  "openutils.no_player": "§aOpenUtils §7- §cYou must input a player name!",
+  "openutils.error_encountered": "§aOpenUtils§7 - §4Error encountered: §c",
+  "openutils.no_result": "§cNo results found!",
+
+  "openutils.on": "§aOn",
+  "openutils.off": "§cOff"
+}

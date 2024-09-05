@@ -1,4 +1,4 @@
-package open.openstats.informationScreen;
+package open.openutils.informationScreen;
 
 import com.google.gson.JsonElement;
 
@@ -18,15 +18,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class infoScreen extends Screen {
+public class InfoScreen extends Screen {
     private static JsonElement data;
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
     private final Identifier SEARCH_ICON = Identifier.ofVanilla("icon/search");
     private final LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> informationLines = infoLines.informationLines;
 
-    public infoScreen(JsonElement data) {
-        super(Text.of("OpenStats"));
-        infoScreen.data = data;
+    public InfoScreen(JsonElement data) {
+        super(Text.of("OpenUtils"));
+        InfoScreen.data = data;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class infoScreen extends Screen {
         TabNavigationWidget tabNavigation = TabNavigationWidget.builder(this.tabManager, this.width).tabs(tabs).build();
         this.addDrawableChild(tabNavigation);
 
-        searchField searchbar = new searchField(textRenderer, width, this);
+        SearchField searchbar = new SearchField(textRenderer, width, this);
         this.addDrawableChild(searchbar);
         tabNavigation.selectTab(0, false);
         tabNavigation.init();
@@ -54,12 +54,12 @@ public class infoScreen extends Screen {
     }
 
     private class newTab extends GridScreenTab {
-        public informationList infoList;
+        public InformationList infoList;
         public newTab(String tabName, LinkedHashMap<String, ArrayList<String>> info_list) {
             super(Text.of(tabName));
             GridWidget.Adder adder = grid.createAdder(1);
 
-            infoList = new informationList(width, height, infoScreen.data.getAsJsonObject(), info_list);
+            infoList = new InformationList(width, height, InfoScreen.data.getAsJsonObject(), info_list);
             adder.add(infoList);
         }
     }

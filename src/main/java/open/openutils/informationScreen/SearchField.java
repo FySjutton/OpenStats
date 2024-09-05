@@ -1,4 +1,4 @@
-package open.openstats.informationScreen;
+package open.openutils.informationScreen;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -7,13 +7,11 @@ import net.minecraft.text.Text;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static open.openstats.openStats.LOGGER;
-
-public class searchField extends TextFieldWidget {
+public class SearchField extends TextFieldWidget {
     private Timer timer;
     private static final long DELAY = 800;
 
-    public searchField(TextRenderer textRenderer, int width, infoScreen parent) {
+    public SearchField(TextRenderer textRenderer, int width, InfoScreen parent) {
         super(textRenderer, width / 2 - width / 6, 29, width / 3, 15, Text.of("Search Bar"));
         super.setChangedListener(text -> {
             if (timer != null) {

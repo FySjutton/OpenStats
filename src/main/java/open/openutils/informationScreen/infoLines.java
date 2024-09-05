@@ -1,4 +1,4 @@
-package open.openstats.informationScreen;
+package open.openutils.informationScreen;
 
 import java.util.ArrayList;
 import java.util.Arrays;

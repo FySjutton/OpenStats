@@ -1,19 +1,18 @@
-package open.openstats;
+package open.openutils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import open.openstats.informationScreen.infoScreen;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static open.openstats.openStats.LOGGER;
+import static open.openutils.OpenUtils.LOGGER;
 
-public class fetchInformation {
+public class FetchInformation {
     public JsonElement fetchProfile(String name) {
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -25,11 +24,11 @@ public class fetchInformation {
             try {
                 return JsonParser.parseString(response.body());
             } catch (Exception e) {
-                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenStats §7- §c" + response.body()));
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§aOpenUtils §7- §c" + response.body()));
                 LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + response.body() + "\"");
             }
         } catch (Exception e) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.translatable("openstats.error_encountered").getString() + e));
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(Text.translatable("openutils.error_encountered").getString() + e));
             LOGGER.error("Tried fetching information for \"" + name + "\" got \"" + e + "\"");
         }
         return null;
