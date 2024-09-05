@@ -16,8 +16,13 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import open.openstats.informationScreen.infoScreen;
 import org.slf4j.Logger;
@@ -32,8 +37,11 @@ public class openStats implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("openstats");
 	private mbSocket musicSocket;
 	private Thread socketThread;
+
 	private String playerName = "";
 	private double oldMBVolume;
+
+	private boolean remindedForToday = false;
 
 	private void createMusicSocket() {
 		LOGGER.info("Creating new MB socket.");
@@ -71,6 +79,24 @@ public class openStats implements ModInitializer {
 					oldMBVolume = mbVolume;
 				}
 			}
+
+			int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+			if (minutes == 0 || minutes == 20 || minutes == 40) {
+				if (!remindedForToday) {
+					remindedForToday = true;
+					client.getToastManager().add(
+							new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION,
+									Text.literal("Marknadsgränsen har återställts!"),
+									Text.literal("Du kan nu sälja igen!")
+							)
+					);
+					player.playSound(SoundEvents.BLOCK_BELL_USE);
+				}
+			} else {
+				remindedForToday = false;
+			}
+
+
 		});
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
