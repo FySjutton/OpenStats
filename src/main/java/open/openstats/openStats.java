@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import open.openstats.informationScreen.infoScreen;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ public class openStats implements ModInitializer {
 	private mbSocket musicSocket;
 	private Thread socketThread;
 	private String playerName = "";
+	private double oldMBVolume;
 
 	private void createMusicSocket() {
 		LOGGER.info("Creating new MB socket.");
@@ -60,6 +63,14 @@ public class openStats implements ModInitializer {
 					createMusicSocket();
 				}
 			}
+			if (musicSocket != null) {
+//				LOGGER.info(String.valueOf(client.options.getSoundVolume(SoundCategory.RECORDS) * client.options.getSoundVolume(SoundCategory.MASTER)));
+				double mbVolume = client.options.getSoundVolume(SoundCategory.RECORDS) * client.options.getSoundVolume(SoundCategory.MASTER);
+				if (mbVolume != oldMBVolume) {
+					musicSocket.set_volume(mbVolume);
+					oldMBVolume = mbVolume;
+				}
+			}
 		});
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
@@ -85,6 +96,18 @@ public class openStats implements ModInitializer {
 			registerAlias(dispatcher, "searchAPI", regLookupCommand);
 			registerAlias(dispatcher, "openStats:searchAPI", regLookupCommand);
 			registerAlias(dispatcher, "openStats:lookup", regLookupCommand);
+
+			LiteralArgumentBuilder<FabricClientCommandSource> setVolume = ClientCommandManager.literal("set_volume")
+					.executes(createFeedbackExecutor("set_volume"))
+					.then(ClientCommandManager.argument("volume", DoubleArgumentType.doubleArg())
+							.executes(context -> {
+								double volume = DoubleArgumentType.getDouble(context, "volume");
+								MinecraftClient client = MinecraftClient.getInstance();
+								client.send(() -> musicSocket.set_volume(volume));
+								return 1;
+							})
+					);
+			LiteralCommandNode<FabricClientCommandSource> setVolumeCommand = dispatcher.register(setVolume);
 		});
 	}
 
