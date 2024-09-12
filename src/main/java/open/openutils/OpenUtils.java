@@ -15,6 +15,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.sound.SoundEngine;
+import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundCategory;
@@ -27,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static open.openutils.ConfigSystem.configFile;
 
 
 public class OpenUtils implements ModInitializer {
@@ -58,6 +62,7 @@ public class OpenUtils implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		new ConfigSystem().checkConfig();
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			ClientPlayerEntity player = MinecraftClient.getInstance().player;
 			if (player != null) {
@@ -65,6 +70,27 @@ public class OpenUtils implements ModInitializer {
 				if (!playerName.equals(currentPlayerName)) {
 					playerName = currentPlayerName;
 					createMusicSocket();
+				}
+
+				int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+				int change = configFile.getAsJsonObject().get("timer_change").getAsInt();
+				if (minutes == getReminderTime(change, 0) || minutes == getReminderTime(change, 20) || minutes == getReminderTime(change, 40)) {
+					if (!remindedForToday) {
+						remindedForToday = true;
+						if (configFile.getAsJsonObject().get("send_toast").getAsBoolean()) {
+							client.getToastManager().add(
+									new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION,
+											Text.literal("Marknadsgränsen har återställts!"),
+											Text.literal("Du kan nu sälja igen!")
+									)
+							);
+						}
+						if (configFile.getAsJsonObject().get("use_sound").getAsBoolean()) {
+							player.playSound(SoundEvents.BLOCK_BELL_USE);
+						}
+					}
+				} else {
+					remindedForToday = false;
 				}
 			}
 			if (musicSocket != null) {
@@ -75,24 +101,6 @@ public class OpenUtils implements ModInitializer {
 					oldMBVolume = mbVolume;
 				}
 			}
-
-			int minutes = Calendar.getInstance().get(Calendar.MINUTE);
-			if (minutes == 0 || minutes == 20 || minutes == 40) {
-				if (!remindedForToday) {
-					remindedForToday = true;
-					client.getToastManager().add(
-							new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION,
-									Text.literal("Marknadsgränsen har återställts!"),
-									Text.literal("Du kan nu sälja igen!")
-							)
-					);
-					player.playSound(SoundEvents.BLOCK_BELL_USE);
-				}
-			} else {
-				remindedForToday = false;
-			}
-
-
 		});
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
@@ -154,5 +162,12 @@ public class OpenUtils implements ModInitializer {
 					.collect(Collectors.toList());
 		}
 		return Collections.emptyList();
+	}
+
+	private int getReminderTime(int change, int normal) {
+		if ((normal - change) < 0) {
+			return 60 + (normal - change);
+		}
+		return normal - change;
 	}
 }

@@ -25,4 +25,4 @@ The `/lookup` command is the main command of this mod, and it opens the full inf
 
 ---
 
-**Warning:** In case 90gQopen makes any changes to their public API, the current version will likely stop working instantly. You'll then have to reinstall a fix-version.
+**Warning:** In case 90gQopen makes any changes to their public API, I will have to make a new fix-version for it, and you will have to install the newest update.

@@ -1,0 +1,11 @@
+// OpenUtils Configuration File
+{
+//
+// -- Survival - Marknaden Reset Notifikationer
+  // Om den ska skicka toast
+  "send_toast": true,
+  // Om den ska låta.
+  "use_sound": true,
+  // När; normalt sätt låter den prick när det resetar. Här kan du ändra så den t.ex låter 5 minuter innan, "-5".
+  "timer_change": 0
+}
